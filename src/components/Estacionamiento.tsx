@@ -25,7 +25,7 @@ export const Estacionamiento = () => {
     try {
       const fetchData = async () => {
         await axios
-          .get('http://localhost:3333/api/datos')
+          .get("https://estacionamiento-back.vercel.app/api/datos")
           .then((a) => {
             const { data } = a;
             setDatos(data);
@@ -38,7 +38,7 @@ export const Estacionamiento = () => {
             } else if (error.request) {
               console.log(error.request);
             } else {
-              console.log('Error', error.message);
+              console.log("Error", error.message);
             }
           });
       };
@@ -54,7 +54,7 @@ export const Estacionamiento = () => {
 
     try {
       await axios
-        .post('http://localhost:3333/api/datos', datos)
+        .post("https://estacionamiento-back.vercel.app/api/datos", datos)
         .catch(function (error) {
           if (error.response) {
             console.log(error.response.data);
@@ -63,7 +63,7 @@ export const Estacionamiento = () => {
           } else if (error.request) {
             console.log(error.request);
           } else {
-            console.log('Error', error.message);
+            console.log("Error", error.message);
           }
         });
     } catch (error) {
@@ -72,14 +72,34 @@ export const Estacionamiento = () => {
   };
 
   const handleSave = async (id: string) => {
-    const datosAxios = {
-      entrada: valueEntrada,
-      salida: valueSalida,
-      cobro: precio,
-    };
+const entradaNumero = new Date(valueEntrada).getTime();
+  const salidaNumero = new Date(valueSalida).getTime();
+  const resultado = salidaNumero - entradaNumero;
+	
+ 
+    
     try {
+		const datosAxios = {
+		  entrada: valueEntrada,
+		  salida: valueSalida,
+		  cobro: 0,
+		};
+		 if (valueEntrada && valueSalida) {
+       if (vehiculo.residente === "No residente") {
+         const division = Math.round(resultado / 60000);
+		     datosAxios.cobro = division * 3
+			 
+       }
+       if (vehiculo.residente === "Residente") {
+         datosAxios.cobro = Math.round(resultado / 60000);
+       }
+     }
+	
       await axios
-        .patch(`http://localhost:3333/api/datos/${id}`, datosAxios)
+        .patch(
+          `https://estacionamiento-back.vercel.app/api/datos/${id}`,
+          datosAxios
+        )
         .catch(function (error) {
           if (error.response) {
             console.log(error.response.data);
@@ -88,7 +108,7 @@ export const Estacionamiento = () => {
           } else if (error.request) {
             console.log(error.request);
           } else {
-            console.log('Error', error.message);
+            console.log("Error", error.message);
           }
         });
     } catch (error) {
@@ -102,24 +122,11 @@ export const Estacionamiento = () => {
     }
   }, [vehiculo]);
 
-  useEffect(() => {
-    const entradaNumero = new Date(valueEntrada).getTime();
-    const salidaNumero = new Date(valueSalida).getTime();
-    const resultado = salidaNumero - entradaNumero;
-
-    if (valueEntrada && valueSalida) {
-      if (vehiculo.residente === 'No residente') {
-        const division = Math.round(resultado / 60000);
-        setPrecio(division * 3);
-      }
-      if (vehiculo.residente === 'Residente') {
-        setPrecio(Math.round(resultado / 60000));
-      }
-    }
-  }, [datos]);
 
   const eliminarModal = async (id: string) => {
-    await axios.delete(`http://localhost:3333/api/datos/${id}`);
+    await axios.delete(
+      `https://estacionamiento-back.vercel.app/api/datos/${id}`
+    );
     window.location.reload();
   };
 
