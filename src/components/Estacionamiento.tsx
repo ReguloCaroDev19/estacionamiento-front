@@ -160,7 +160,7 @@ export const Estacionamiento = () => {
             <div className="bg-white rounded shadow p-6 w-full lg:max-w-4xl">
               <div className="mb-4 ">
                 <h1 className="text-grey-darkest text-4xl text-center">
-                  Estacionamiento Garza Limon
+                  Estacionamiento
                 </h1>
               </div>
               <div>
