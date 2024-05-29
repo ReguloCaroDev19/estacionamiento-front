@@ -1,11 +1,11 @@
-import axios from 'axios';
-import DateTimePicker from 'react-datetime-picker';
-import 'react-datetime-picker/dist/DateTimePicker.css';
-import 'react-calendar/dist/Calendar.css';
-import 'react-clock/dist/Clock.css';
-import { useEffect, useState } from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { AppPDF } from '../AppPDF';
+import axios from "axios";
+import DateTimePicker from "react-datetime-picker";
+import "react-datetime-picker/dist/DateTimePicker.css";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
+import { useEffect, useState } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { AppPDF } from "../AppPDF";
 
 export const Estacionamiento = () => {
   const [showModalInfo, setShowModalInfo] = useState<boolean>(false);
@@ -13,13 +13,12 @@ export const Estacionamiento = () => {
   const [showModalConfirmDelete, setShowModalConfirmDelete] =
     useState<boolean>(false);
   const [editarModal, setEditarModal] = useState<boolean>(true);
-  const [placa, setPlaca] = useState('');
-  const [residente, setResidente] = useState<string>('Oficial');
+  const [placa, setPlaca] = useState("");
+  const [residente, setResidente] = useState<string>("Oficial");
   const [datos, setDatos] = useState([]);
   const [vehiculo, setVehiculo] = useState<any>([]);
   const [valueEntrada, onChangeEntrada] = useState<any>(new Date());
   const [valueSalida, onChangeSalida] = useState<any>(new Date());
-  const [precio, setPrecio] = useState(0);
 
   useEffect(() => {
     try {
@@ -44,9 +43,9 @@ export const Estacionamiento = () => {
       };
       fetchData();
     } catch (e) {
-      console.log('error en hacer fetch');
+      console.log("error en hacer fetch");
     }
-  }, [datos]);
+  }, []);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -72,29 +71,28 @@ export const Estacionamiento = () => {
   };
 
   const handleSave = async (id: string) => {
-const entradaNumero = new Date(valueEntrada).getTime();
-  const salidaNumero = new Date(valueSalida).getTime();
-  const resultado = salidaNumero - entradaNumero;
-	
- 
-    
+    const entradaNumero = new Date(valueEntrada).getTime();
+    const salidaNumero = new Date(valueSalida).getTime();
+    const resultado = salidaNumero - entradaNumero;
+
     try {
-		const datosAxios = {
-		  entrada: valueEntrada,
-		  salida: valueSalida,
-		  cobro: 0,
-		};
-		 if (valueEntrada && valueSalida) {
-       if (vehiculo.residente === "No residente") {
-         const division = Math.round(resultado / 60000);
-		     datosAxios.cobro = division * 3
-			 
-       }
-       if (vehiculo.residente === "Residente") {
-         datosAxios.cobro = Math.round(resultado / 60000);
-       }
-     }
-	
+      const datosAxios = {
+		placa: placa,
+        entrada: valueEntrada,
+        salida: valueSalida,
+        cobro: 0,
+      };
+      if (valueEntrada && valueSalida) {
+        if (vehiculo.residente === "No residente") {
+          const division = Math.round(resultado / 60000);
+          datosAxios.cobro = division * 3;
+        }
+        if (vehiculo.residente === "Residente") {
+          datosAxios.cobro = Math.round(resultado / 60000);
+        }
+      }
+	  console.log(datosAxios);
+	  
       await axios
         .patch(
           `https://estacionamiento-back.vercel.app/api/datos/${id}`,
@@ -112,7 +110,7 @@ const entradaNumero = new Date(valueEntrada).getTime();
           }
         });
     } catch (error) {
-      console.log('necesitas llenar los campos');
+      console.log("necesitas llenar los campos");
     }
   };
 
@@ -121,7 +119,6 @@ const entradaNumero = new Date(valueEntrada).getTime();
       setPlaca(vehiculo.placa);
     }
   }, [vehiculo]);
-
 
   const eliminarModal = async (id: string) => {
     await axios.delete(
@@ -147,9 +144,11 @@ const entradaNumero = new Date(valueEntrada).getTime();
   };
 
   const separar = (num: number) => {
-    return num.toString().padStart(2, '0');
+    return num.toString().padStart(2, "0");
   };
-
+  const handleChangePlaca = (e:any) => {
+    setPlaca(e.target.value);
+  };
   return (
     <div className="h-full w-full">
       {datos ? (
@@ -194,15 +193,15 @@ const entradaNumero = new Date(valueEntrada).getTime();
                         <p>{vehiculo.residente}</p>
                       </div>
 
-                      {vehiculo.residente === 'No residente' ||
-                      vehiculo.residente === 'Oficial' ? (
+                      {vehiculo.residente === "No residente" ||
+                      vehiculo.residente === "Oficial" ? (
                         <div className="flex justify-between w-[150px]">
                           <p>
                             {vehiculo.cobro.slice(-1) >= 60
                               ? cambioDeMinutosAHora(
                                   vehiculo.cobro.slice(-1) / 3
-                                ) + ' Horas'
-                              : vehiculo.cobro.slice(-1) / 3 + ' minutos'}
+                                ) + " Horas"
+                              : vehiculo.cobro.slice(-1) / 3 + " minutos"}
                           </p>
                         </div>
                       ) : (
@@ -210,12 +209,12 @@ const entradaNumero = new Date(valueEntrada).getTime();
                           <p>
                             {vehiculo.cobro.slice(-1) >= 60
                               ? cambioDeMinutosAHora(vehiculo.cobro.slice(-1)) +
-                                ' Horas'
-                              : vehiculo.cobro.slice(-1) + ' minutos'}
+                                " Horas"
+                              : vehiculo.cobro.slice(-1) + " minutos"}
                           </p>
                         </div>
                       )}
-                      {vehiculo.residente === 'Oficial' ? (
+                      {vehiculo.residente === "Oficial" ? (
                         <div className="">
                           <p>No hay cobro</p>
                         </div>
@@ -233,11 +232,11 @@ const entradaNumero = new Date(valueEntrada).getTime();
           <div className="flex justify-end mr-20">
             <PDFDownloadLink
               document={<AppPDF data={datos} />}
-              fileName={'estacionamiento'}
+              fileName={"estacionamiento"}
             >
               {({ loading }) =>
                 loading ? (
-                  'Cargando...'
+                  "Cargando..."
                 ) : (
                   <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-lg p-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
                     Descargar Pdf
@@ -249,24 +248,24 @@ const entradaNumero = new Date(valueEntrada).getTime();
           <div>
             {showModalInfo ? (
               <>
-                <div className="justify-center  items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                  <div className="relative w-full my-6 mx-auto max-w-3xl ">
+                <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                  <div className="relative w-full my-6 mx-auto max-w-3xl">
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                      <div className="flex items-start justify-between  p-5 border-b border-solid border-slate-200 rounded-t">
+                      <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                        <p className="text-4xl font-semibold">Placa:</p>
                         <input
-                          className="text-5xl font-semibold w-full "
+                          className="text-4xl font-semibold focus:ring-transparent outline-none"
+                          value={placa}
                           disabled={editarModal}
-                          defaultValue={'Placa: ' + vehiculo.placa}
-                          onChange={(e) => setPlaca(e.target.value)}
+                          onChange={handleChangePlaca}
                           required
                         />
-
                         <div>
                           <button
-                            className="p-1 ml-auto  border-0 text-black  float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                            className="p-1 ml-auto border-0 text-black float-right leading-none font-semibold outline-none focus:outline-none"
                             onClick={() => setShowModalInfo(false)}
                           >
-                            <span className="bg-transparent text-black  h-6 w-6 text-4xl block outline-none focus:outline-none">
+                            <span className="bg-transparent text-black h-6 w-6 text-3xl block outline-none focus:outline-none">
                               ×
                             </span>
                           </button>
@@ -274,27 +273,29 @@ const entradaNumero = new Date(valueEntrada).getTime();
                       </div>
                       <div className="relative p-6 flex-auto">
                         <div>
-                          <p className="my-4 text-slate-500 text-lg leading-relaxed">
+                          <p  className="my-4 text-gray-600 text-lg leading-relaxed">
                             Placa: {vehiculo.placa}
                           </p>
-                          <div className="flex justify-around">
-                            <label className="block mt-3 mb-1 text-sm font-medium text-gray-900 dark:text-gray-400">
+                          <div className="flex justify-between">
+                            <label className="text-sm font-medium text-gray-900">
                               Escoge la hora de entrada
                             </label>
-                            <label className="block mt-3 mb-1 text-sm font-medium text-gray-900 dark:text-gray-400">
+                            <label className="text-sm font-medium text-gray-900">
                               Escoge la hora de salida
                             </label>
                           </div>
-                          <div className="flex justify-around">
+                          <div className="flex justify-between mt-2">
                             <DateTimePicker
                               onChange={onChangeEntrada}
                               value={valueEntrada}
                               disabled={editarModal}
+                              className="w-1/2"
                             />
                             <DateTimePicker
                               onChange={onChangeSalida}
                               value={valueSalida}
                               disabled={editarModal}
+                              className="w-1/2"
                             />
                           </div>
                         </div>
@@ -304,7 +305,7 @@ const entradaNumero = new Date(valueEntrada).getTime();
                         {editarModal ? (
                           <>
                             <button
-                              className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                              className="text-red-500 font-bold uppercase px-4 py-2 text-sm focus:outline-none mr-4 bg-transparent hover:bg-red-100 rounded transition duration-300"
                               type="button"
                               onClick={() =>
                                 setShowModalConfirmDelete(
@@ -315,7 +316,7 @@ const entradaNumero = new Date(valueEntrada).getTime();
                               Eliminar
                             </button>
                             <button
-                              className="bg-sky-600 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                              className="bg-sky-600 text-white font-bold uppercase px-4 py-2 text-sm rounded shadow hover:shadow-lg focus:outline-none mr-4 transition duration-300"
                               type="button"
                               onClick={() => editarVehiculo()}
                             >
@@ -325,14 +326,14 @@ const entradaNumero = new Date(valueEntrada).getTime();
                         ) : (
                           <>
                             <button
-                              className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                              className="text-red-500 font-bold uppercase px-4 py-2 text-sm focus:outline-none mr-4 bg-transparent hover:bg-red-100 rounded transition duration-300"
                               type="button"
                               onClick={() => setEditarModal(!editarModal)}
                             >
                               Cancelar
                             </button>
                             <button
-                              className="bg-emerald-600 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                              className="bg-emerald-600 text-white font-bold uppercase px-4 py-2 text-sm rounded shadow hover:shadow-lg focus:outline-none mr-4 transition duration-300"
                               type="submit"
                               onClick={() => {
                                 handleSave(vehiculo._id);
@@ -351,26 +352,26 @@ const entradaNumero = new Date(valueEntrada).getTime();
 
                 <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
                 <div>
-                  {showModalConfirmDelete ? (
-                    <div className="justify-center  items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                      <div className="relative w-full my-6 mx-auto max-w-3xl ">
-                        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                          <div className="flex items-start justify-between  p-5 border-b border-solid border-slate-200 rounded-t">
-                            <h1 className="text-5xl font-semibold w-full ">
-                              Estas seguro que quieres eliminar el vehiculo{' '}
+                  {showModalConfirmDelete && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50 overflow-x-hidden overflow-y-auto">
+                      <div className="relative w-full max-w-3xl mx-auto">
+                        <div className="bg-white rounded-lg shadow-lg flex flex-col border border-solid border-slate-200">
+                          <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                            <h1 className="text-2xl font-semibold">
+                              ¿Estás seguro de que quieres eliminar el vehículo{" "}
                               {vehiculo.placa}?
                             </h1>
                           </div>
-                          <div className="flex justify-around py-4">
+                          <div className="flex justify-center py-4">
                             <button
-                              className="text-blue-800 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                              className="text-blue-800 uppercase font-bold px-6 py-2 text-sm focus:outline-none mr-2 bg-transparent hover:bg-blue-100 rounded transition duration-300"
                               type="button"
                               onClick={() => setShowModalConfirmDelete(false)}
                             >
-                              Cerrar
+                              Cancelar
                             </button>
                             <button
-                              className="bg-red-600 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                              className="bg-red-600 text-white uppercase font-bold px-6 py-2 text-sm focus:outline-none mr-2 rounded hover:bg-red-700 transition duration-300"
                               type="button"
                               onClick={() => eliminarModal(vehiculo._id)}
                             >
@@ -380,7 +381,7 @@ const entradaNumero = new Date(valueEntrada).getTime();
                         </div>
                       </div>
                     </div>
-                  ) : null}
+                  )}
                 </div>
               </>
             ) : null}
@@ -419,7 +420,7 @@ const entradaNumero = new Date(valueEntrada).getTime();
                             onChange={(e) => setResidente(e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-300 dark:placeholder-gray-400 dark:text-stone-900 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           >
-                            <option defaultValue={'Oficial'}>
+                            <option defaultValue={"Oficial"}>
                               Selecciona una opcion del tipo de vehiculo
                             </option>
                             <option value="Oficial">Oficial</option>
@@ -439,6 +440,7 @@ const entradaNumero = new Date(valueEntrada).getTime();
                           <button
                             className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="submit"
+                            onClick={() => setShowModalAdd(false)}
                           >
                             Agregar
                           </button>
